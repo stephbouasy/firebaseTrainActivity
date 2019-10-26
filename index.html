@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Schedule</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    </head>
+
+<body id="#tbody">
+    <!-- title -->
+    <div class="jumbotron" id="#jumbotron">
+        <h1 style="text-align: center; font-weight: bold;">The Hogwarts Express</h1>
+        <h3 style="text-align: center; font-weight: bold;">All Aboard!</h3>
+    </div>
+
+    <div class="container" id="#tbody">
+        <!-- table -->
+        <div class="card">
+            <div class="card-header">
+                Current Train Schedule
+            </div>
+            <div class="card-body">
+                <table id="displayTable" style="width:100%">
+                    <tr>
+                        <th id="trainName">Train Name</th>
+                        <th id="destination">Destination</th>
+                        <th id="frequency">Frequency (min)</th>
+                        <th id="nextArrival">Next Arrival</th>
+                        <th id="minutes">Minutes Away</th>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- input form -->
+        <br>
+        <div class="card">
+            <div class="card-header">
+                Add Train
+            </div>
+            <div class="card-body">
+
+                <form>
+                    <!-- name -->
+                    <div class="form-group">
+                        <label for="Name">Train Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Train Name">
+                    </div>
+                    <!-- position -->
+                    <div class="form-group">
+                        <label for="Role">Destination</label>
+                        <input type="text" class="form-control" id="role" placeholder="Destination">
+                    </div>
+                    <!-- date -->
+                    <div class="form-group">
+                        <label for="Date">First Train Time (HH:mm - military time)</label>
+                        <input type="time" class="form-control" id="start-date" placeholder="00:00">
+                    </div>
+                    <!-- Months Worked -->
+                    <div class="form-group">
+                        <label for="Worked">Frequency (min)</label>
+                        <input type="number" class="form-control" id="worked" placeholder="0">
+                    </div>
+
+                    <!-- submit button -->
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+
+
+
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Firebase References -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var config = {
+            apiKey: "AIzaSyAFGtroTJeBHou6TsdXGMwpu1xJNjgkusA",
+            authDomain: "timesheet-group-9b389.firebaseapp.com",
+            databaseURL: "https://timesheet-group-9b389.firebaseio.com",
+            projectId: "timesheet-group-9b389",
+            storageBucket: "timesheet-group-9b389.appspot.com",
+            messagingSenderId: "713780339725",
+            appId: "1:713780339725:web:71cd7bc9b71fb72daa2144"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(config);
+        var database = firebase.database();
+
+        //global variable
+        var name = "";
+        var role = "";
+        var startDate = "";
+        var worked = "";
+
+        $("#submit").on("click", function () {
+            event.preventDefault();
+
+            name = $("#name").val().trim();
+            role = $("#role").val().trim();
+            startDate = $("#start-date").val().trim();
+            worked = $("#worked").val().trim();
+            
+
+            database.ref().push({
+                name: name,
+                role: role,
+                startDate: startDate,
+                worked: worked,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+        });
+
+
+        //grab data from 
+        database.ref().on("child_added", function (childSnapshot) {
+            console.log(childSnapshot);
+            //display in row
+            $("#displayTable").append("<tr>" +
+                "<td>" + childSnapshot.val().name +
+                "<td>" + childSnapshot.val().role +
+                "<td>" + childSnapshot.val().startDate +
+                "<td>" + childSnapshot.val().worked +
+                "<tr>");
+
+        }, function (error) {
+            console.log("error" + error.code);
+        });
+
+       </script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+.tbody {
+    background-color: red;
+}
+
+.jumbotron {
+    font-family: 'Arvo', serif;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy412rMC56x4hHQw2VhO2omI7me0GnQFoFvPxC6EL_cowrBBCMxA&s");
+    color: gold;
+    padding-top: 10%;
+}
